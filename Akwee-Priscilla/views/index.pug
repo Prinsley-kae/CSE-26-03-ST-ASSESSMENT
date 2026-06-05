@@ -1,0 +1,17 @@
+doctype html
+html(lang="en")
+  head
+    title Welcome to Videx
+    link(rel="stylesheet", href="/css/style.css")
+  body
+    .center-container
+      .logo
+        //- SVG Video Icon for the logo
+        svg(width="50" height="50" viewBox="0 0 24 24" fill="#ff0000" style="vertical-align: middle; margin-right: 10px;")
+          circle(cx="12" cy="12" r="10" fill="#ff0000")
+          path(d="M10 8L16 12L10 16V8Z" fill="#ffffff")
+        | Videx
+      
+      //- Redirect to the dashboard
+      a(href="/dashboard")
+        button(type="button") JOIN

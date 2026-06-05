@@ -1,0 +1,81 @@
+doctype html
+html(lang="en")
+  head
+    title Upload Video
+    link(rel="stylesheet", href="/css/style.css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+  body
+    .upload-container
+      //- Flash message display block
+      if success_msg && success_msg.length > 0
+        .alert(style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;")
+          = success_msg
+      
+      h2 Upload your video
+      form(action="/upload", method="post", enctype="multipart/form-data")
+        .left-column
+          .input-group
+            input(type="text", name="title", placeholder="Video Title", required)
+          .input-group
+            textarea(name="description", placeholder="Description (Optional)")
+          .input-group
+            select(name="quality", required)
+              option(value="", disabled, selected) Video quality
+              option(value="360p") 360p
+              option(value="720p") 720p
+              option(value="1080p") 1080p
+          .input-group
+            input(type="date", name="publishDate", required)
+        
+        .right-column
+          //- Upload Video Zone
+          label.upload-zone(for="videoFile")
+            video#videoPreview(style="display:none; width:100%; height:100%; object-fit:cover;")
+            div#videoText
+              i.fas.fa-cloud-upload-alt
+              p Upload video
+            input(type="file", name="videoFile", id="videoFile", required, style="display:none", accept="video/*")
+          
+          //- Upload Thumbnail Zone
+          label.upload-zone(for="thumbnail")
+            img#thumbPreview(style="display:none; width:100%; height:100%; object-fit:cover;")
+            div#thumbText
+              i.fas.fa-cloud-upload-alt
+              p Upload Thumbnail
+            input(type="file", name="thumbnail", id="thumbnail", required, style="display:none", accept="image/*")
+          
+          button(type="submit", id="submitBtn") UPLOAD
+
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        // Validation Logic
+        const inputs = document.querySelectorAll('input[required], select[required]');
+        inputs.forEach(input => {
+          input.oninvalid = function(e) { e.target.setCustomValidity('Required field'); };
+          input.oninput = function(e) { e.target.setCustomValidity(''); };
+        });
+
+        // Preview Logic
+        function previewFile(input, previewId, textId) {
+          const file = input.files[0];
+          if (file) {
+            const reader = new FileReader();
+            const preview = document.getElementById(previewId);
+            const text = document.getElementById(textId);
+            reader.onload = function(e) {
+              preview.src = e.target.result;
+              preview.style.display = 'block';
+              text.style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+          }
+        }
+
+        document.getElementById('videoFile').addEventListener('change', function() {
+          previewFile(this, 'videoPreview', 'videoText');
+        });
+
+        document.getElementById('thumbnail').addEventListener('change', function() {
+          previewFile(this, 'thumbPreview', 'thumbText');
+        });
+      });
